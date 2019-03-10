@@ -1,0 +1,66 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@using Umbraco.Web
+
+
+@*
+    This snippet displays a list of links of the pages immediately under the top-most page in the content tree.
+    This is the home page for a standard website.
+    It also highlights the current active page/section in the navigation with the CSS class "current".
+*@
+
+@{ 
+    var root = Model.Content.Site();
+    var selection = root.Children.Where(x => x.IsVisible()).ToArray(); 
+
+}
+
+@if (selection.Length > 0)
+{   
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Aarhus Web Developer Corporation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="@(root.IsAncestorOrSelf(Model.Content) ? "current" : null)">
+                    <a class="nav-link" href="@root.Url">Home</a>
+                </li>
+                @foreach (var item in selection)
+                {
+                    if(item.DocumentTypeAlias == "projectsOverview") {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              @item.Name
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @foreach(var childItem in item.Children().Where("Visible").Where(x => x.HasValue("projectStatus") &&
+                                @Umbraco.GetPreValueAsString(x.GetPropertyValue<int>("projectStatus")) == "Completed"))
+                                {
+                                    var isProtected = umbraco.library.IsProtected(childItem.Id, childItem.Path);
+                                    var loginAccess = isProtected && umbraco.library.HasAccess(childItem.Id, childItem.Path);
+
+                                    if (!isProtected || loginAccess)
+                                    {
+                                        <a class="dropdown-item" href="@childItem.Url">@childItem.Name</a>
+                                    }
+                                }
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@item.Url">All projects</a>
+                                </div>
+                          </li>
+                    } else {
+                        <li class="@(item.IsAncestorOrSelf(Model.Content) ? "current" : null)">
+                            <a class="nav-link" href="@item.Url">@item.Name</a>
+                        </li>
+                    }
+                    
+                }
+            </ul>
+        </div>
+    </nav>
+}
+
+
+

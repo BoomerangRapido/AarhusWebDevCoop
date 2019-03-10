@@ -1,0 +1,27 @@
+hr {
+    height: 1px;
+	background-color: black;
+    margin-bottom: 0px;
+}
+
+.article-row-odd {
+	background: whitesmoke;
+}
+
+.article-row-even {
+	background: lightgray;
+}
+
+.center-horizontally {
+	display: block;
+	margin: 0 auto;
+}
+
+.overview-margin {
+	margin: 10;
+}
+
+.pagebody {
+	width: 90%;
+	margin: auto;
+}

@@ -1,0 +1,23 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ProjectsOverview>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+
+@{
+    var selection = Model.Children.Where(x => x.IsVisible()).OrderBy(x => x.CreateDate).ToList();
+    var rowNumber = 1;
+    var rowClass = "";
+}
+
+<div class="overview-margin">
+<H2>
+    Our projects
+    <small class="text-muted">... choose one to read more</small>
+</H2>
+@Model.ProjectsBodyText
+
+ @Umbraco.RenderMacro("listNewestProjects")
+
+
+</div>

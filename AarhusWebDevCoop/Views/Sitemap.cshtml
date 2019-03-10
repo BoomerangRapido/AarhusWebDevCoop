@@ -1,0 +1,9 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Sitemap>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+<div class="overview-margin">
+    <h2>Sitemap</h2>
+    @Html.Partial("SiteMap_PartialView", Model)
+</div>

@@ -1,0 +1,39 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@using Umbraco.Web.Models
+
+@{
+    /**/
+    var root = Model.Content.Site();
+    var selection = root.Children.Where(x => x.IsVisible()).ToArray();
+    var rowNumber = 0;
+    var rowClass = "";
+    var numOfProjects = Model.GetParameterValue<int>("numOfProjects", 0);
+}
+
+@if (selection.Length > 0)
+{
+
+    var items = selection.Where(x => x.DocumentTypeAlias == "projectsOverview").First().Children().Where(x => x.HasValue("projectStatus") &&
+                @Umbraco.GetPreValueAsString(x.GetPropertyValue<int>("projectStatus")) == "Completed").OrderBy(x => x.CreateDate).Take(numOfProjects);
+    @* If numOfProjects is not defined, return all *@
+    if (numOfProjects <= 0)
+    {
+        items = selection.Where(x => x.DocumentTypeAlias == "projectsOverview").First().Children().OrderBy(x => x.CreateDate);
+    }
+
+
+    <hr>
+    foreach (var item in items)
+    {
+        rowClass = (++rowNumber % 2 == 0) ? "article-row-even" : "article-row-odd";
+                  
+        <div class=@rowClass>
+        <h4>@item.Name</h4>
+            <div class="projectpreview">
+                @Umbraco.Truncate((@item.HasValue("projectDescription") ? item.GetPropertyValue<string>("projectDescription") : "No content"), 400)
+                <a href="@item.Url">Read more...</a>
+                <hr>
+            </div>
+        </div>
+    }
+}
