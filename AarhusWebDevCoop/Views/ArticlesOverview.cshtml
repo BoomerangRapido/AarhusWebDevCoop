@@ -19,19 +19,14 @@
 <hr>
 
 @foreach(var item in selection){
-    if (rowNumber % 2 == 0) {
-        rowClass = "article-row-even";
-    } else {
-        rowClass = "article-row-odd";
-    }
-    rowNumber++;
+    rowClass = (++rowNumber % 2 == 0) ? "article-row-even" : "article-row-odd";
     <div class=@rowClass>
 	    <h4>@item.Name</h4>
         <div class="articlepreview">
             @Umbraco.Truncate((@item.HasValue("ArticleContent") ? item.GetPropertyValue<string>("ArticleContent") : "No content"), 400)
             <a href="@item.Url">Read More..</a>
-    <hr>
-</div>
+            <hr>
+        </div>
     </div>
 }
 

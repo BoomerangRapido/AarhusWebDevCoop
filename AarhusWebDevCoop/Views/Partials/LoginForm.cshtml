@@ -9,7 +9,7 @@
 
 @{
     var loginModel = new LoginModel();
-    
+
     Html.EnableClientValidation();
     Html.EnableUnobtrusiveJavaScript();
     Html.RequiresJs("/umbraco_client/ui/jquery.js");
@@ -23,26 +23,32 @@
 @if (!Members.GetCurrentLoginStatus().IsLoggedIn)
 {
 
-using (Html.BeginUmbracoForm<UmbLoginController>("HandleLogin"))
-{
-    <fieldset>
-        <legend>Login</legend>
-        
-        @Html.ValidationSummary("loginModel", true)
+<div class="login-form">
+    @using (Html.BeginUmbracoForm<UmbLoginController>
+        ("HandleLogin"))
+        {
+        <fieldset>
+            <h2 class="text-center">Login</h2>
 
-        @Html.LabelFor(m => loginModel.Username)
-        @Html.TextBoxFor(m => loginModel.Username)
-        @Html.ValidationMessageFor(m => loginModel.Username)
-        <br />
-
-        @Html.LabelFor(m => loginModel.Password)
-        @Html.PasswordFor(m => loginModel.Password)
-        @Html.ValidationMessageFor(m => loginModel.Password)
-        <br />
-
-        <button>Login</button>
-    </fieldset>  
-}
+            @Html.ValidationSummary("loginModel", true)
+            <div class="form-group">
+                @Html.LabelFor(m => loginModel.Username) 
+                @Html.TextBoxFor(m => loginModel.Username)
+                @Html.ValidationMessageFor(m => loginModel.Username)
+                <br />
+                </div>
+            <div class="form-group">
+                @Html.LabelFor(m => loginModel.Password)
+                @Html.PasswordFor(m => loginModel.Password)
+                @Html.ValidationMessageFor(m => loginModel.Password)
+                <br />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-dark btn-block">Login</button>
+                </div>
+</fieldset>
+        }
+</div>
 }
 else
 {
