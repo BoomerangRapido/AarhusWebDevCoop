@@ -4,8 +4,13 @@
 Layout = "Master.cshtml";
 }
 <div class="overview-margin">
-<h2>@CurrentPage.Name</h2>
-
+    <div class="text-center">
+        <h2>@CurrentPage.Name</h2>
+        <p>
+            Want to know about one of our projects, or how you can become a member?<br />
+            Fill out the form below and we will get back to you as soon as possible.
+        </p>
+    </div>
     @if (TempData["success"] == null)
     {
         @Html.Action("Index", "ContactFormSurface")
