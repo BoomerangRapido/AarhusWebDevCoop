@@ -7,6 +7,10 @@
 <div class="contact-form">
     @using (Html.BeginUmbracoForm("HandleFormSubmit", "ContactFormSurface", new object { }, new { @class = "form-horizontal" }))
     {
+        <p>
+            Want to know about one of our projects, or how you can become a member?
+            Fill out the form below and we will get back to you as soon as possible.
+        </p>
         <div class="form-group">
             <label class="control-label">
                 @Html.LabelFor(m => m.Name, new { @class = "col-sm-2 control-label" })
@@ -51,4 +55,4 @@
             </div>
         </div>
     }
-    </div>
+</div>

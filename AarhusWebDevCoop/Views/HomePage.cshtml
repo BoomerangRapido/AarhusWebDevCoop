@@ -8,12 +8,13 @@
     var logo = Umbraco.Media(logoId.ToString());
     var logoURL = logo.Url;
 }
-<div class="overview-margin">
+<div class="overview-margin text-center">
+    <h1>Aarhus <small>Web Developer Corporation</small></h1>
    @* <img class="center-horizontally" src="@logoURL"> *@
-
+    </div>
 <div class="text-center"> 
     @Model.MainContent
 </div>
 <h3>Our latest projects</h3>
  @Umbraco.RenderMacro("listNewestProjects", new { numOfProjects = 3 })
- </div>
+

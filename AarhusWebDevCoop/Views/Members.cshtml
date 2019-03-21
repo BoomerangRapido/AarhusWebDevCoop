@@ -6,35 +6,40 @@
     Layout = "Master.cshtml";
 }
 
-@{
-    var memberService = ApplicationContext.Current.Services.MemberService;
-    var members = memberService.GetMembersByGroup("Active");
+<div class="overview-margin">
+    <h2>Members</h2>
+    <p>Here you will find a list of our avtive members, along with contact information and their primary skills.</p>
+    @{
+        var memberService = ApplicationContext.Current.Services.MemberService;
+        var members = memberService.GetMembersByGroup("Active");
 
-    foreach (var member in members)
-    {
-        if (member.GetValue("photo") != null)
+        foreach (var member in members)
         {
-            string image = member.GetValue<string>("Photo");
-            if (image != null)
+            if (member.GetValue("photo") != null)
             {
-                ImageCropDataSet imageCrop = JsonConvert.DeserializeObject<ImageCropDataSet>(image);
-                <img src="@imageCrop.Src.GetCropUrl(width: 100)" />
-            }
-        }
-        <p>
-            @member.Name<br />
-            @member.GetValue("address")<br />
-            @member.GetValue("zip") @member.GetValue("city")<br />
-            Email: @member.Email<br />
-            Skills:
-            @{
-                if (member.GetValue("skills") != null)
+                string image = member.GetValue<string>("Photo");
+                if (image != null)
                 {
-                    string[] skills = member.GetValue("skills").ToString().Split(',');
-                    string skillString = string.Join(", ", from skill in skills select umbraco.library.GetPreValueAsString(Convert.ToInt32(skill)));
-                    <span>@skillString</span>
+                    ImageCropDataSet imageCrop = JsonConvert.DeserializeObject<ImageCropDataSet>(image);
+                    <img src="@imageCrop.Src.GetCropUrl(width: 100)" />
                 }
             }
-        </p>
+            <p>
+                @member.Name<br />
+                @member.GetValue("address")<br />
+                @member.GetValue("zip") @member.GetValue("city")<br />
+                Email: @member.Email<br />
+
+                @{
+                    if (member.GetValue("skills") != null)
+                    {
+                        Skills:
+                        string[] skills = member.GetValue("skills").ToString().Split(',');
+                        string skillString = string.Join(", ", from skill in skills select umbraco.library.GetPreValueAsString(Convert.ToInt32(skill)));
+                        <span>@skillString</span>
+                    }
+                }
+            </p>
+        }
     }
-}
+</div>

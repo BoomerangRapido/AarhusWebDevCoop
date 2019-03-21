@@ -8,14 +8,17 @@
     It also highlights the current active page/section in the navigation with the CSS class "current".
 *@
 
-@{ 
+@{
+    @* Sæt variablen "root" til at page på hovedsiden *@
     var root = Model.Content.Site();
-    var selection = root.Children.Where(x => x.IsVisible()).ToArray(); 
+    @* Find alle synlige (x.IsVisible) sider der ligger umiddelbart under hovedsiden, og placer dem i variablen "selection" som et array *@
+    var selection = root.Children.Where(x => x.IsVisible()).ToArray();
 
 }
 
+@* Udfør kun nedenstående hvis der er noget i "selection" (hvis der er synlige undersider) *@
 @if (selection.Length > 0)
-{   
+{
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Aarhus Web Developer Corporation</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,36 +29,60 @@
                 <li class="@(root.IsAncestorOrSelf(Model.Content) ? "current" : null)">
                     <a class="nav-link" href="@root.Url">Home</a>
                 </li>
+                @* Iterer gennem alle elementer i "selection" *@
                 @foreach (var item in selection)
                 {
-                    if(item.DocumentTypeAlias == "projectsOverview") {
+                    @* Tjek om alias er "projectsOverview". I så fald skal der genereres en drop down menu *@
+                    if (item.DocumentTypeAlias == "projectsOverview")
+                    {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              @item.Name
+                            @* Indsæt et link med projekt sidens navn. Dette fungerer som drop down toggle knap *@
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @item.Name
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                @foreach(var childItem in item.Children().Where("Visible").Where(x => x.HasValue("projectStatus") &&
+                                @* 
+                                    Iterer gennem alle child elementer under projekter, som er synlige og som har status "Completed".
+                                    Da "Project status" property på dokument typen returnerer en integer værdi, kan man banytte funktionen 
+                                    "GetPreValueAsString" til at få den tilsvarende tekstværdi.
+                                *@
+                                @foreach (var childItem in item.Children().Where("Visible").Where(x => x.HasValue("projectStatus") &&
                                 @Umbraco.GetPreValueAsString(x.GetPropertyValue<int>("projectStatus")) == "Completed"))
                                 {
+                                    @* 
+                                        Sæt to variable der definerer om:
+                                          - den pågældende underside er beskyttet
+                                          - om brugeren har adgang til den pågældende underside
+
+                                        Begge dele kan gøres v.h.a. standard Umbraco funktioner.
+                                    *@
                                     var isProtected = umbraco.library.IsProtected(childItem.Id, childItem.Path);
                                     var loginAccess = isProtected && umbraco.library.HasAccess(childItem.Id, childItem.Path);
 
+                                    @* 
+                                        Hvis siden ikke er beskyttet, eller bruger har adgang via sit medlemskab, 
+                                        tilføjes et link til drop down listen
+                                    *@
                                     if (!isProtected || loginAccess)
                                     {
                                         <a class="dropdown-item" href="@childItem.Url">@childItem.Name</a>
                                     }
                                 }
+                                @* Nederst i drop down listen indsættes et link til projekt oversigtssiden *@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="@item.Url">All projects</a>
-                                </div>
-                          </li>
-                    } else {
+                            </div>
+                        </li>
+                    }
+                    @* Hvis alias ikke er "projectsOverview" *@
+                    else
+                    {
                         <li class="@(item.IsAncestorOrSelf(Model.Content) ? "current" : null)">
                             <a class="nav-link" href="@item.Url">@item.Name</a>
                         </li>
                     }
-                    
+
                 }
             </ul>
         </div>

@@ -29,11 +29,11 @@
                   
         <div class=@rowClass>
         <h4>@item.Name</h4>
-            <div class="projectpreview">
+        <div class="projectpreview">
                 @Umbraco.Truncate((@item.HasValue("projectDescription") ? item.GetPropertyValue<string>("projectDescription") : "No content"), 400)
                 <a href="@item.Url">Read more...</a>
                 <hr>
-            </div>
+        </div>
         </div>
     }
 }
