@@ -28,5 +28,9 @@
         <script src="~/Scripts/jquery.validate.min.js"></script>
         <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     </body>
-    
+    <footer class="footer">
+        <div class="text-center">
+            @Umbraco.Field("footer", recursive: true)
+        </div>
+    </footer>
 </html>
